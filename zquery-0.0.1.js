@@ -606,7 +606,7 @@
 			if(type.toLowerCase() === 'get') {
 				for(key in data) {
 					if(data.hasOwnProperty(key)) {
-						convert.push(key + '=' + data[key]);
+						convert.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
 					}
 				}
 				if(convert.length > 0) {
@@ -618,7 +618,7 @@
 			// 
 			xmlhttp.onreadystatechange = function() {
 				if(xmlhttp.readyState === 4) {
-					if(xmlhttp.status === 200) {
+					if(xmlhttp.status >= 200 && xmlhttp.status < 300 || xmlhttp.status == 304) {
 						if(success) {
 							success(xmlhttp.responseText, xmlhttp.status);
 						} else {
@@ -636,10 +636,7 @@
 			// send
 			if(type.toLowerCase() === 'post') {
 				xmlhttp.setRequestHeader('Content-type', contentType);
-				if(typeof convert === 'string') {
-					xmlhttp.send(convert);
-				}
-				xmlhttp.send();
+				xmlhttp.send(data);
 			} else {
 				xmlhttp.send();
 			}
